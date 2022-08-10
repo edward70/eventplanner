@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Event Proposal Progress Tracker</title>
+    <meta name="description" content="Event Proposal Progress Tracker">
+    <meta name="theme-color" content="#b32417">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  </head>
+  <body>
+    <main role="main" class="container">
+		<header>
+		  <img class="logo" src="{{ url_for('static', filename='suzanne-cory-logo.svg') }}">
+		  <h2 class="title">Event Proposal Progress Tracker</h2>
+		</header>
+		<br>
+		<table>
+		  <tr>
+			<th>Status</th>
+			<th>Teacher Performing Review</th>
+		  </tr>
+		  {% for teacher in teachers %}
+		  <tr>
+			<td>&#x2714;&#xFE0F;</td>
+			<td>{{ teacher }}</td>
+		  </tr>
+		  {% endfor %}
+		</table>
+    </main>
+  </body>
+</html>

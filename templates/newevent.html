@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Event Proposal</title>
+    <meta name="description" content="Event Proposal Form">
+    <meta name="theme-color" content="#b32417">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  </head>
+  <body>
+    <main role="main" class="container">
+		<header>
+		  <img class="logo" src="{{ url_for('static', filename='suzanne-cory-logo.svg') }}">
+		  <h2 class="title">Event Proposal Form</h2>
+		</header>
+		<form action="{{ url_for('neweventpost') }}" method="post">
+		  <p>Data collected by this form will be used to propose a new school event. If you have any inquiries about how this data is used, please contact Ms. Nguyen.</p>
+		  <label>Event Name</label><br>
+		  <input type="text" name="eventname" placeholder="Super Cool Event" required><br>
+		  <label>Student Organisers</label><br>
+		  <input type="text" name="organisers" placeholder="Jane Smith, Bob Alexander" required><br>
+		  <label>Name of Main Student</label><br>
+		  <input type="text" name="mainstudentname" placeholder="Jane Smith" required><br>
+		  <label>Email of Main Student</label><br>
+		  <input type="text" name="mainstudentemail" placeholder="abc123@suzannecoryhs.vic.edu.au" required><br>
+		  <label>Teacher In Charge</label><br>
+		  <input type="text" name="teacher" placeholder="Ms. Jones" required><br>
+		  <label>Event Summary (ie. the reason for the event, students or groups involved, general requirements, etc.)</label><br>
+		  <textarea name="mainstudentname" placeholder="Lorem ipsum dolor sit amet..." required></textarea><br>
+		  <label>Live School Calendar</label>
+		  <iframe src="{{ schoolcalendar }}" height="500"></iframe>
+		  <label>Live Lunchtime Activities Calendar</label>
+		  <iframe src="{{ activitycalendar }}" height="500"></iframe>
+		  <label>Event Date (yyyy-mm-dd) (check the date isn't taken in the calendars)</label><br>
+		  <input type="text" name="date" placeholder="1970-01-17" required><br>
+		  <label>Event Time (ensure there are no clashes with events in calendars)</label><br>
+		  <input type="text" name="time" placeholder="1:00pm" required><br>
+		  <label>Event venue or location</label><br>
+		  <input type="text" name="venue" placeholder="G11" required><br>
+		  <label>Who is setting up the event?</label><br>
+		  <input type="text" name="whosetup" placeholder="Jane Smith" required><br>
+		  <label>What is being set up?</label><br>
+		  <textarea name="setup" placeholder="Chairs, tables, inflatable pool, Death Star" required></textarea><br>
+		  <label>Is this being set up during class time?</label><br>
+		  <input type="radio" name="classtimebool" id="classtimeyes" value="Yes" required>
+		  <label for="classtimeyes">Yes</label><br>
+		  <input type="radio" name="classtimebool" id="classtimeno" value="No">
+		  <label for="classtimeno">No</label><br><br>
+		  <label>When is the event being set up (ensure there are no clashes with events in calendars)</label><br>
+		  <input type="text" name="setuptime" placeholder="12:30pm" required><br>
+		  <label>Do any products need to be purchased?</label><br>
+		  <input type="radio" name="productsbool" id="productsyes" value="Yes" required>
+		  <label for="productsyes">Yes</label><br>
+		  <input type="radio" name="productsbool" id="productsno" value="No">
+		  <label for="productsno">No</label><br><br>
+		  <label>Who is responsible for purchasing products (if applicable)</label><br>
+		  <input type="text" name="productsresponsibility" placeholder="Jane Smith"><br>
+		  <label>Are any school items/furniture required?</label><br>
+		  <input type="radio" name="furniturebool" id="furnitureyes" value="Yes" required>
+		  <label for="furnitureyes">Yes</label><br>
+		  <input type="radio" name="furniturebool" id="furnitureno" value="No">
+		  <label for="furnitureno">No</label><br><br>
+		  <label>List required items/furniture (if applicable)</label><br>
+		  <textarea name="furniture" placeholder="Chairs, tables"></textarea><br>
+		  <label>Is assistance required for setting up or packing up?</label><br>
+		  <input type="radio" name="assistancebool" id="assistanceyes" value="Yes" required>
+		  <label for="assisstanceyes">Yes</label><br>
+		  <input type="radio" name="assistancebool" id="assistanceno" value="No">
+		  <label for="assisstanceno">No</label><br><br>
+		  <label>Which of the following requests are applicable to the Event?</label><br>
+		  <input type="checkbox" name="financial" id="financial" value="financial">
+		  <label for="financial">Requesting financial support</label><br>
+		  <input type="checkbox" name="logistical" id="logistical" value="logistical">
+		  <label for="logistical">Requesting logistical support necessary for the event</label><br>
+		  <input type="checkbox" name="materials" id="materials" value="materials">
+		  <label for="materials">Requesting additional materials necessary for the event</label><br>
+		  <input type="checkbox" name="risks" id="risks" value="risks">
+		  <label for="risks">Request for approval of event risks (ie. possible allergy risks, OH&S risks, etc.)</label><br><br>
+		  <label>Include details about prior requests (if applicable)</label><br>
+		  <textarea name="requestdetails"></textarea>
+		  <p>All money collected within schools MUST go through the school accounts. At no point can students be solely responsible for cash; a teacher must always be present. Please follow the cash handling guide.</p>
+		  <label>Do you need a cash tin?</label><br>
+		  <input type="radio" name="cashtinbool" id="cashtinyes" value="Yes" required>
+		  <label for="cashtinyes">Yes</label><br>
+		  <input type="radio" name="cashtinbool" id="cashtinno" value="No">
+		  <label for="cashtinno">No</label><br><br>
+		  <label>Do you need a float?</label><br>
+		  <input type="radio" name="floatbool" id="floatyes" value="Yes" required>
+		  <label for="floatyes">Yes</label><br>
+		  <input type="radio" name="floatbool" id="floatno" value="No">
+		  <label for="floatno">No</label><br><br>
+		  <label>Which staff member will collect and supervise cash handling and return the money? (if applicable)</label><br>
+		  <input type="text" name="cashsupervise"><br>
+		  <label>If this is a fundraising; What organisation is money being raised for? (if applicable)</label><br>
+		  <input type="text" name="organisation"><br>
+		  <label>If this is a fundraising; What are the payment details and arrangements? (if applicable)</label><br>
+		  <input type="text" name="paymentdetails"><br>
+		  <p>Remember to email any promotional materials for the event to <a href="mailto:communications@suzannecoryhs.vic.edu.au">communications@suzannecoryhs.vic.edu.au</a>. Additionally, send any photos from after the event and a newsletter article.</p>
+		  <p>By submitting this event proposal, I acknowledge that the event complies with school rules and applicable SCHS events policies.</p>
+		  {% if fail %}
+		    <p>Error: Data invalid. Make sure data submitted is in correct format.</p>
+		  {% endif %}
+		  <input type="submit" value="Submit">
+		</form>
+    </main>
+  </body>

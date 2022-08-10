@@ -1,0 +1,138 @@
+input[type="submit"] {
+	background-color: #b32417;
+	color: white;
+	padding: 0.5em;
+	border-style: none;
+}
+
+body {
+	color: #b32417;
+	margin: 2em;
+	border-width: 0.5em;
+	border-color: #b32417;
+	border-radius: 0.5em;
+	border-style: solid;
+	font-family: Calibri;
+}
+
+.login {
+	display: table;
+	border-collapse: separate;
+	border-spacing: 0.5em;
+}
+
+input[type="text"], textarea {
+	margin-bottom: 0.5em;
+	width: 50%;
+}
+
+.row {
+	display: table-row;
+}
+
+.row > label, .row > input {
+	display: table-cell;
+	margin-bottom: 0;
+	width: initial;
+}
+
+label, input, p, span, textarea {
+	font-weight: bold;
+	font-family: Calibri;
+	font-size: 16px;
+}
+
+textarea {
+	min-height: 5em;
+}
+
+iframe {
+	margin-bottom: 0.5em;
+	width: 100%;
+}
+
+.container {
+	margin: 1em;
+}
+
+.logo {
+	width: 6em;
+	display: inline;
+}
+
+.title {
+	display: inline;
+	padding-left: 0.5em;
+}
+
+header, .buttons {
+	display: flex;
+}
+
+.buttons {
+	gap: 1em;
+}
+
+.logout {
+	color: black;
+	text-align: right;
+	margin-left: auto;
+}
+
+.manager-container {
+	display: flex;
+	justify-content: space-between;
+	gap: 1em;
+}
+
+h3 {
+	color: black;
+}
+
+.redbutton, .greenbutton, .bluebutton {
+	-webkit-appearance: button;
+    -moz-appearance: button;
+    appearance: button;
+	
+    text-decoration: none;
+    color: white;
+	padding: 0.5em;
+	border-style: none;
+	border-radius: 0.5em;
+}
+
+.redbutton {
+	background-color: #b32417;
+}
+
+.greenbutton {
+	background-color: #8a8d09;
+}
+
+.bluebutton {
+	background-color: #0070c0;
+}
+
+.data {
+	color: black;
+}
+
+h4 {
+	margin: 0;
+	font-size: 1.1em;
+}
+
+table, th, td {
+  border: 3px solid black;
+  border-collapse: collapse;
+  color: black;
+  padding: 5px;
+}
+
+th {
+	font-weight: bold;
+}
+
+.pending {
+	color: orange;
+}

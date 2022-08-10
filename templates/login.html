@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Login</title>
+    <meta name="description" content="Event Planning Login">
+    <meta name="theme-color" content="#b32417">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  </head>
+  <body>
+    <main role="main" class="container">
+		<header>
+		  <img class="logo" src="{{ url_for('static', filename='suzanne-cory-logo.svg') }}">
+		  <h2 class="title">Event Planning Login</h2>
+		</header>
+		{% if fail %}
+		  <p>Error: Username or Password incorrect</p>
+		{% else %}
+		  <br>
+		{% endif %}
+		<form action="{{ url_for('loginpost') }}" method="post" class="login">
+		  <p class="row">
+			<label for="username">Username</label>
+			<input type="text" name="username">
+		  </p>
+		  <p class="row">
+			<label for="password">Password</label>
+			<input type="password" name="password">
+		  </p>
+		  <p class="row">
+			<input type="submit" value="Login">
+		  </p>
+		</form>
+    </main>
+  </body>
+</html>
