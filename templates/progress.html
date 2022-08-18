@@ -22,7 +22,13 @@
 		  </tr>
 		  {% for teacher in teachers %}
 		  <tr>
+			{% if approval == "approved" %}
 			<td>&#x2714;&#xFE0F;</td>
+			{% elif approval == "rejected" %}
+			<td>&#10060;</td>
+			{% else %}
+			<td>Pending</td>
+			{% endif %}
 			<td>{{ teacher }}</td>
 		  </tr>
 		  {% endfor %}

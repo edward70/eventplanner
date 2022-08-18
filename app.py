@@ -6,6 +6,7 @@ from docx import Document # import docx library to process word document files
 import sqlite3, atexit, hashlib, datetime # import libraries for database, exit handling, hashing and dates & time
 from functools import wraps # import decorator handler
 from filters import nl2br # import jinja filter
+from contextlib import contextmanager
 
 app = Flask(__name__) # create flask webserver
 app.jinja_env.filters['nl2br'] = nl2br # enable newline to br converter plugin
@@ -77,10 +78,25 @@ def privileged(func):
         else:
             return render_template('login.html')
     return wrapper
+    
+# context manager to handle sql transactions
+# https://charlesleifer.com/blog/going-fast-with-sqlite-and-python/
+@contextmanager
+def transaction(conn):
+    # We must issue a "BEGIN" explicitly when running in auto-commit mode.
+    conn.execute('BEGIN')
+    try:
+        # Yield control back to the caller.
+        yield
+    except:
+        conn.rollback()  # Roll back all changes if an exception occurs.
+        raise
+    else:
+        conn.commit()
 
 @app.route("/")
-def hello_world():
-    return "<p>Hello, World!</p>"
+def default():
+    return redirect(url_for('newevent'))
 
 @app.route("/login")
 def login():
@@ -149,10 +165,11 @@ def neweventpost():
     
 @app.route("/progress/<eventhash>")
 def progress(eventhash):
+    approval = cur.execute('SELECT * FROM events WHERE eventhash = ?', (eventhash,)).fetchone()[29]
     print(eventhash)
     teachers = [names.get(i) for i in auth if names.get(i) != None]
     print(teachers)
-    return render_template('progress.html', teachers=teachers)
+    return render_template('progress.html', teachers=teachers, approval=approval)
     
 @app.route("/editevent/<eventhash>")
 @privileged
@@ -177,7 +194,9 @@ def editeventpost():
            "cashsupervise", "organisation", "paymentdetails", "eventhash"]
     data = [request.form.get(i,"") for i in lst]
     data.append("pending")
-    #todo
+    with transaction(con):
+        cur.execute('DELETE FROM events WHERE eventhash = ?', (data[28],))
+        cur.execute('INSERT INTO events VALUES({})'.format(('?,' * 30)[0:-1]), data)
     return redirect(url_for('manager'))
         
 @app.route("/approveevent/<eventhash>")
