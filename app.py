@@ -1,17 +1,23 @@
-from flask import *
-import sqlite3, atexit, hashlib, datetime
-from functools import wraps
-from docx import Document
-from filters import nl2br
+# external libraries
+from flask import * # import flask library to create webserver
+from docx import Document # import docx library to process word document files
 
-app = Flask(__name__)
-app.jinja_env.filters['nl2br'] = nl2br
+# builtin/local imports
+import sqlite3, atexit, hashlib, datetime # import libraries for database, exit handling, hashing and dates & time
+from functools import wraps # import decorator handler
+from filters import nl2br # import jinja filter
+
+app = Flask(__name__) # create flask webserver
+app.jinja_env.filters['nl2br'] = nl2br # enable newline to br converter plugin
 
 # hardcoded constants
 auth = {"username": "password"} # username -> password
 names = {"username": "John Doe"} # username -> real name
+#emails = {"test@suzannecoryhs.vic.edu.au": "username"} # email -> username
 approvalreqs = ["username"] # usernames required to approve events
+# school calendar url
 schoolcalendar = "https://docs.google.com/document/d/1IhUHiIH9ctDlDJ2-_vLI42qQm-MGW5-Yxxv0xx_8bQo/edit?usp=sharing"
+# school activity calendar url
 activitycalendar = "https://docs.google.com/document/d/e/2PACX-1vT12_PabQ-wKDFeGW26U1fAT9KhByozRazm7CJcLqHFqfB6cpGpRhHCmOWmIAZOSWpPbIvtqyNqvo8J/pub?embedded=true"
 app.secret_key = "4Fa!R6w1@wkbMUSHO47r7#zmn"
 
@@ -47,14 +53,14 @@ def parse_calendar(filename):
             for cell in row.cells:
                 cell_data = list(filter(lambda x: x, cell.text.split()))
                 
-                if len(cell_data) > 0 and cell_data[0].isdigit(): # check theres a day number
-                    if len(cell_data) > 2:
-                        day = int(cell_data[0]) # extract day number
+                if len(cell_data) > 0 and cell_data[0].isdigit(): # data validation: check theres a day number
+                    if len(cell_data) > 2: # data validation: check that the event contains text beyond two tokens
+                        day = int(cell_data[0]) # extract day number as integer
                         
-                        if day < lastNum:
+                        if day < lastNum: # data validation: check that subsequent date is larger than previous
                             currentMonth = currentMonth + 1 # increment month
                         
-                        datesTaken.append(datetime.date(currentYear, currentMonth, day).isoformat())
+                        datesTaken.append(datetime.date(currentYear, currentMonth, day).isoformat()) # add date to list
                         conflicts.append(cell.text[len(cell_data[0])+1:])
                         lastNum = day
     return dict(zip(datesTaken, conflicts))
@@ -152,7 +158,27 @@ def progress(eventhash):
 @privileged
 def editevent(eventhash):
     event = cur.execute('SELECT * FROM events WHERE eventhash = ?', (eventhash,)).fetchone()
-    return render_template('editevent.html', event=event)
+    return render_template('editevent.html', fail=request.args.get("fail"),
+                           schoolcalendar=schoolcalendar,
+                           activitycalendar=activitycalendar,
+                           event=event, eventhash=eventhash)
+   
+@app.route("/editeventpost", methods=['POST'])
+@privileged
+def editeventpost():
+    lst = ["name", "organisers", "mainstudentname",
+           "mainstudentemail", "teacher", "summary",
+           "date", "time", "venue", "whosetup",
+           "setup", "classtimebool", "setuptime",
+           "productsbool", "productsresponsibility",
+           "furniturebool", "furniture", "assistancebool",
+           "financial", "logistical", "materials", "risks",
+           "requestdetails", "cashtinbool", "floatbool",
+           "cashsupervise", "organisation", "paymentdetails", "eventhash"]
+    data = [request.form.get(i,"") for i in lst]
+    data.append("pending")
+    #todo
+    return redirect(url_for('manager'))
         
 @app.route("/approveevent/<eventhash>")
 @privileged
@@ -165,10 +191,16 @@ def approveevent(eventhash):
 def rejectevent(eventhash):
     cur.execute('UPDATE events SET approval = "rejected" WHERE eventhash = ?', (eventhash,))
     return redirect(url_for('manager'))
-    
-@app.route("/cashhandling")
-def cashhandling():
-    return render_template('cashhandling.html')
        
+#@app.route("/newaccount")
+#@privileged
+#def newaccount():
+#    return render_template('newaccount.html')
+    
+#@app.route("/newaccountpost", methods=['POST'])
+#@privileged
+#def newaccountpost():
+#    pass
+                           
 if __name__ == "__main__":
     app.run()

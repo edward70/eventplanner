@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Edit Event</title>
+    <meta name="description" content="Edit Event">
+    <meta name="theme-color" content="#b32417">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  </head>
+  <body>
+    <main role="main" class="container">
+		<header>
+		  <img class="logo" src="{{ url_for('static', filename='suzanne-cory-logo.svg') }}">
+		  <h2 class="title">Edit Event</h2>
+		</header>
+		<form action="{{ url_for('editeventpost') }}" method="post">
+		  <label>Event Name</label><br>
+		  <input type="text" name="eventname" placeholder="Super Cool Event" value="{{ event[0] }}" required><br>
+		  <label>Student Organisers</label><br>
+		  <input type="text" name="organisers" placeholder="Jane Smith, Bob Alexander" value="{{ event[1] }}" required><br>
+		  <label>Name of Main Student</label><br>
+		  <input type="text" name="mainstudentname" placeholder="Jane Smith" value="{{ event[2] }}" required><br>
+		  <label>Email of Main Student</label><br>
+		  <input type="text" name="mainstudentemail" placeholder="abc123@suzannecoryhs.vic.edu.au" value="{{ event[3] }}" required><br>
+		  <label>Teacher In Charge</label><br>
+		  <input type="text" name="teacher" placeholder="Ms. Jones" value="{{ event[4] }}" required><br>
+		  <label>Event Summary (ie. the reason for the event, students or groups involved, general requirements, etc.)</label><br>
+		  <textarea name="mainstudentname" placeholder="Lorem ipsum dolor sit amet..." value="{{ event[5] }}" required></textarea><br>
+		  <label>Live School Calendar</label>
+		  <iframe src="{{ schoolcalendar }}" height="500"></iframe>
+		  <label>Live Lunchtime Activities Calendar</label>
+		  <iframe src="{{ activitycalendar }}" height="500"></iframe>
+		  <label>Event Date (yyyy-mm-dd) (check the date isn't taken in the calendars)</label><br>
+		  <input type="text" name="date" placeholder="1970-01-17" value="{{ event[6] }}" required><br>
+		  <label>Event Time (ensure there are no clashes with events in calendars)</label><br>
+		  <input type="text" name="time" placeholder="1:00pm" value="{{ event[7] }}" required><br>
+		  <label>Event venue or location</label><br>
+		  <input type="text" name="venue" placeholder="G11" value="{{ event[8] }}" required><br>
+		  <label>Who is setting up the event?</label><br>
+		  <input type="text" name="whosetup" placeholder="Jane Smith" value="{{ event[9] }}" required><br>
+		  <label>What is being set up?</label><br>
+		  <textarea name="setup" placeholder="Chairs, tables, inflatable pool, Death Star" value="{{ event[10] }}" required></textarea><br>
+		  <label>Is this being set up during class time?</label><br>
+		  {% if event[11] == "Yes" %}
+		  <input type="radio" name="classtimebool" id="classtimeyes" value="Yes" checked required>
+		  <label for="classtimeyes">Yes</label><br>
+		  <input type="radio" name="classtimebool" id="classtimeno" value="No">
+		  <label for="classtimeno">No</label><br><br>
+		  {% else %}
+		  <input type="radio" name="classtimebool" id="classtimeyes" value="Yes" required>
+		  <label for="classtimeyes">Yes</label><br>
+		  <input type="radio" name="classtimebool" id="classtimeno" checked value="No">
+		  <label for="classtimeno">No</label><br><br>
+		  {% endif %}
+		  <label>When is the event being set up (ensure there are no clashes with events in calendars)</label><br>
+		  <input type="text" name="setuptime" placeholder="12:30pm" value="{{ event[12] }}" required><br>
+		  <label>Do any products need to be purchased?</label><br>
+		  {% if event[13] == "Yes" %}
+		  <input type="radio" name="productsbool" id="productsyes" value="Yes" checked required>
+		  <label for="productsyes">Yes</label><br>
+		  <input type="radio" name="productsbool" id="productsno" value="No">
+		  <label for="productsno">No</label><br><br>
+		  {% else %}
+		  <input type="radio" name="productsbool" id="productsyes" value="Yes" required>
+		  <label for="productsyes">Yes</label><br>
+		  <input type="radio" name="productsbool" id="productsno" checked value="No">
+		  <label for="productsno">No</label><br><br>
+		  {% endif %}
+		  <label>Who is responsible for purchasing products (if applicable)</label><br>
+		  <input type="text" name="productsresponsibility" placeholder="Jane Smith" value="{{ event[14] }}"><br>
+		  <label>Are any school items/furniture required?</label><br>
+		  {% if event[15] == "Yes" %}
+		  <input type="radio" name="furniturebool" id="furnitureyes" value="Yes" checked required>
+		  <label for="furnitureyes">Yes</label><br>
+		  <input type="radio" name="furniturebool" id="furnitureno" value="No">
+		  <label for="furnitureno">No</label><br><br>
+		  {% else %}
+		  <input type="radio" name="furniturebool" id="furnitureyes" value="Yes" required>
+		  <label for="furnitureyes">Yes</label><br>
+		  <input type="radio" name="furniturebool" id="furnitureno" checked value="No">
+		  <label for="furnitureno">No</label><br><br>
+		  {% endif %}
+		  <label>List required items/furniture (if applicable)</label><br>
+		  <textarea name="furniture" placeholder="Chairs, tables" value="{{ event[16] }}"></textarea><br>
+		  <label>Is assistance required for setting up or packing up?</label><br>
+		  {% if event[17] %}
+		  <input type="radio" name="assistancebool" id="assistanceyes" value="Yes" checked required>
+		  <label for="assisstanceyes">Yes</label><br>
+		  <input type="radio" name="assistancebool" id="assistanceno" value="No">
+		  <label for="assisstanceno">No</label><br><br>
+		  {% else %}
+		  <input type="radio" name="assistancebool" id="assistanceyes" value="Yes" required>
+		  <label for="assisstanceyes">Yes</label><br>
+		  <input type="radio" name="assistancebool" id="assistanceno" checked value="No">
+		  <label for="assisstanceno">No</label><br><br>
+		  {% endif %}
+		  <label>Which of the following requests are applicable to the Event?</label><br>
+		  <input type="checkbox" name="financial" id="financial" {% if event[18] %}checked{% endif %} value="financial">
+		  <label for="financial">Requesting financial support</label><br>
+		  <input type="checkbox" name="logistical" id="logistical" {% if event[19] %}checked{% endif %} value="logistical">
+		  <label for="logistical">Requesting logistical support necessary for the event</label><br>
+		  <input type="checkbox" name="materials" id="materials" {% if event[20] %}checked{% endif %} value="materials">
+		  <label for="materials">Requesting additional materials necessary for the event</label><br>
+		  <input type="checkbox" name="risks" id="risks" {% if event[21] %}checked{% endif %} value="risks">
+		  <label for="risks">Request for approval of event risks (ie. possible allergy risks, OH&S risks, etc.)</label><br><br>
+		  <label>Include details about prior requests (if applicable)</label><br>
+		  <textarea name="requestdetails" value="{{ event[22] }}"></textarea>
+		  <p>All money collected within schools MUST go through the school accounts. At no point can students be solely responsible for cash; a teacher must always be present. Please follow the cash handling guide.</p>
+		  <label>Do you need a cash tin?</label><br>
+		  {% if event[23] == "Yes" %}
+		  <input type="radio" name="cashtinbool" id="cashtinyes" value="Yes" checked required>
+		  <label for="cashtinyes">Yes</label><br>
+		  <input type="radio" name="cashtinbool" id="cashtinno" value="No">
+		  <label for="cashtinno">No</label><br><br>
+		  {% else %}
+		  <input type="radio" name="cashtinbool" id="cashtinyes" value="Yes" required>
+		  <label for="cashtinyes">Yes</label><br>
+		  <input type="radio" name="cashtinbool" id="cashtinno" value="No" checked>
+		  <label for="cashtinno">No</label><br><br>
+		  {% endif %}
+		  {% if event[24] == "Yes" %}
+		  <label>Do you need a float?</label><br>
+		  <input type="radio" name="floatbool" id="floatyes" value="Yes" checked required>
+		  <label for="floatyes">Yes</label><br>
+		  <input type="radio" name="floatbool" id="floatno" value="No">
+		  <label for="floatno">No</label><br><br>
+		  {% else %}
+		  <label>Do you need a float?</label><br>
+		  <input type="radio" name="floatbool" id="floatyes" value="Yes" required>
+		  <label for="floatyes">Yes</label><br>
+		  <input type="radio" name="floatbool" id="floatno" value="No" checked>
+		  <label for="floatno">No</label><br><br>
+		  {% endif %}
+		  <label>Which staff member will collect and supervise cash handling and return the money? (if applicable)</label><br>
+		  <input type="text" name="cashsupervise" value="{{ event[25] }}"><br>
+		  <label>If this is a fundraising; What organisation is money being raised for? (if applicable)</label><br>
+		  <input type="text" name="organisation" value="{{ event[26] }}"><br>
+		  <label>If this is a fundraising; What are the payment details and arrangements? (if applicable)</label><br>
+		  <input type="text" name="paymentdetails" value="{{ event[27] }}"><br>
+		  {% if fail %}
+		    <p>Error: Data invalid. Make sure data submitted is in correct format.</p>
+		  {% endif %}
+		  <!-- https://www.w3schools.com/tags/att_input_type_hidden.asp -->
+		  <input type="hidden" id="eventhash" name="eventhash" value="{{ eventhash }}">
+		  <input type="submit" value="Submit">
+		</form>
+    </main>
+  </body>
