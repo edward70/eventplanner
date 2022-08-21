@@ -15,8 +15,7 @@ app.jinja_env.filters['nl2br'] = nl2br # enable newline to br converter plugin
 # hardcoded constants
 auth = {"username": "password"} # username -> password
 names = {"username": "John Doe"} # username -> real name
-#emails = {"test@suzannecoryhs.vic.edu.au": "username"} # email -> username
-approvalreqs = ["username"] # usernames required to approve events
+approval_order = ["username"]
 # school calendar url
 schoolcalendar = "https://docs.google.com/document/d/1IhUHiIH9ctDlDJ2-_vLI42qQm-MGW5-Yxxv0xx_8bQo/edit?usp=sharing"
 # school activity calendar url
@@ -38,7 +37,7 @@ db_signature = '''(name text, organisers text, mainstudentname text,
                 financial text, logistical text, materials text, risks text,
                 requestdetails text, cashtinbool text, floatbool text,
                 cashsupervise text, organisation text, paymentdetails text,
-                eventhash text, approval text)'''
+                eventhash text, approval text, approvalindex integer)'''
 cur.execute('CREATE TABLE IF NOT EXISTS events {}'.format(db_signature))
 atexit.register(lambda: con.close())
 
@@ -103,6 +102,35 @@ def datetime_valid(dt_str):
         return False
     return True
 
+def handle_event(request):
+    lst = ["name", "organisers", "mainstudentname",
+           "mainstudentemail", "teacher", "summary",
+           "date", "time", "venue", "whosetup",
+           "setup", "classtimebool", "setuptime",
+           "productsbool", "productsresponsibility",
+           "furniturebool", "furniture", "assistancebool",
+           "financial", "logistical", "materials", "risks",
+           "requestdetails", "cashtinbool", "floatbool",
+           "cashsupervise", "organisation", "paymentdetails"]
+    data = [request.form.get(i,"").trim() for i in lst]
+    return data
+    
+def validate_event(data):
+    pattern = re.compile('((1[0-2]|0?[1-9]):([0-5][0-9]) ?([AaPp][Mm]))') # time regex
+    pattern2 = re.compile("^[a-zA-Z0-9.! #$%&'*+/=? ^_`{|}~-]+@[a-zA-Z0-9-]+(?:\. [a-zA-Z0-9-]+)*$") # email regex
+    if not (all(data[0:14]) and data[15] and data[17] and data[26] and data[25]): # existance check
+        return False
+    elif not all(map([data[11], data[13], data[15], data[17], data[26], data[25]], lambda x: (x == "Yes" or x == "No"))): # validate radio button
+        return False
+    elif not datetime_valid(data[6]): # validate date
+        return False
+    elif not pattern.match(data[7]): # validate time
+        return False
+    elif not pattern2.match(data[3]): # validate email
+        return False
+    else:
+        return True
+        
 @app.route("/")
 def default():
     return redirect(url_for('newevent'))
@@ -155,31 +183,13 @@ def newevent():
                            
 @app.route("/neweventpost", methods=['POST'])
 def neweventpost():
-    lst = ["name", "organisers", "mainstudentname",
-           "mainstudentemail", "teacher", "summary",
-           "date", "time", "venue", "whosetup",
-           "setup", "classtimebool", "setuptime",
-           "productsbool", "productsresponsibility",
-           "furniturebool", "furniture", "assistancebool",
-           "financial", "logistical", "materials", "risks",
-           "requestdetails", "cashtinbool", "floatbool",
-           "cashsupervise", "organisation", "paymentdetails"]
-    data = [request.form.get(i,"").trim() for i in lst]
-    pattern = re.compile('((1[0-2]|0?[1-9]):([0-5][0-9]) ?([AaPp][Mm]))') # time regex
-    pattern2 = re.compile("^[a-zA-Z0-9.! #$%&'*+/=? ^_`{|}~-]+@[a-zA-Z0-9-]+(?:\. [a-zA-Z0-9-]+)*$") # email regex
-    if not (all(data[0:14]) and data[15] and data[17] and data[26] and data[25]): # existance check
-        return redirect(url_for('newevent')+"?fail=true")
-    elif not all(map([data[11], data[13], data[15], data[17], data[26], data[25], lambda x: (x == "Yes" or x == "No"))): # validate radio button
-        return redirect(url_for('newevent')+"?fail=true")
-    elif not datetime_valid(data[6]): # validate date
-        return redirect(url_for('newevent')+"?fail=true")
-    elif not pattern.match(data[7]): # validate time
-        return redirect(url_for('newevent')+"?fail=true")
-    elif not pattern2.match(data[3]): # validate email
-        return redirect(url_for('newevent')+"?fail=true")
+    data = handle_event(request)
+    if validate_event(data) == False:
+        redirect(url_for('newevent')+"?fail=true")
     d_hash = hashlib.sha224(str(data).encode("utf-8")).hexdigest()
     data.append(d_hash)
     data.append("pending")
+    data.append(0)
     print(str(data))
     cur.execute('INSERT INTO events VALUES({})'.format(('?,' * 30)[0:-1]), data)
     return redirect(url_for('progress', eventhash=d_hash))
@@ -204,17 +214,12 @@ def editevent(eventhash):
 @app.route("/editeventpost", methods=['POST'])
 @privileged
 def editeventpost():
-    lst = ["name", "organisers", "mainstudentname",
-           "mainstudentemail", "teacher", "summary",
-           "date", "time", "venue", "whosetup",
-           "setup", "classtimebool", "setuptime",
-           "productsbool", "productsresponsibility",
-           "furniturebool", "furniture", "assistancebool",
-           "financial", "logistical", "materials", "risks",
-           "requestdetails", "cashtinbool", "floatbool",
-           "cashsupervise", "organisation", "paymentdetails", "eventhash"]
-    data = [request.form.get(i,"") for i in lst]
+    data = handle_event(request)
+    if validate_event(data) == False:
+        return redirect(url_for('editevent', eventhash=data[28])+"?fail=true")
+    data.append(request.form.get(eventhash, "").trim())
     data.append("pending")
+    data.append(0)
     with transaction(con):
         cur.execute('DELETE FROM events WHERE eventhash = ?', (data[28],))
         cur.execute('INSERT INTO events VALUES({})'.format(('?,' * 30)[0:-1]), data)
