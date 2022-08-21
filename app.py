@@ -7,6 +7,7 @@ import sqlite3, atexit, hashlib, datetime # import libraries for database, exit 
 from functools import wraps # import decorator handler
 from filters import nl2br # import jinja filter
 from contextlib import contextmanager
+import re
 
 app = Flask(__name__) # create flask webserver
 app.jinja_env.filters['nl2br'] = nl2br # enable newline to br converter plugin
@@ -93,6 +94,14 @@ def transaction(conn):
         raise
     else:
         conn.commit()
+        
+# https://stackoverflow.com/questions/41129921/validate-an-iso-8601-datetime-string-in-python
+def datetime_valid(dt_str):
+    try:
+        datetime.fromisoformat(dt_str)
+    except:
+        return False
+    return True
 
 @app.route("/")
 def default():
@@ -155,7 +164,19 @@ def neweventpost():
            "financial", "logistical", "materials", "risks",
            "requestdetails", "cashtinbool", "floatbool",
            "cashsupervise", "organisation", "paymentdetails"]
-    data = [request.form.get(i,"") for i in lst]
+    data = [request.form.get(i,"").trim() for i in lst]
+    pattern = re.compile('((1[0-2]|0?[1-9]):([0-5][0-9]) ?([AaPp][Mm]))') # time regex
+    pattern2 = re.compile("^[a-zA-Z0-9.! #$%&'*+/=? ^_`{|}~-]+@[a-zA-Z0-9-]+(?:\. [a-zA-Z0-9-]+)*$") # email regex
+    if not (all(data[0:14]) and data[15] and data[17] and data[26] and data[25]): # existance check
+        return redirect(url_for('newevent')+"?fail=true")
+    elif not all(map([data[11], data[13], data[15], data[17], data[26], data[25], lambda x: (x == "Yes" or x == "No"))): # validate radio button
+        return redirect(url_for('newevent')+"?fail=true")
+    elif not datetime_valid(data[6]): # validate date
+        return redirect(url_for('newevent')+"?fail=true")
+    elif not pattern.match(data[7]): # validate time
+        return redirect(url_for('newevent')+"?fail=true")
+    elif not pattern2.match(data[3]): # validate email
+        return redirect(url_for('newevent')+"?fail=true")
     d_hash = hashlib.sha224(str(data).encode("utf-8")).hexdigest()
     data.append(d_hash)
     data.append("pending")
