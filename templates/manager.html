@@ -69,15 +69,15 @@
 							{% if event[27] %}
 							Fundraiser payment details: {{ event[27] }}<br>
 							{% endif %}
-							{% if event[31] %}
+							{% if event[30] %}
 							Date conflicts with the following school calendar events:<br>
-							{{ event[31] | nl2br }}
+							{{ event[30] | nl2br }}
 							{% else %}
 							Date does not conflict with school calendar events<br>
 							{% endif %}
-							{% if event[32] %}
+							{% if event[31] %}
 							Date conflicts with the following lunchtime calendar events:<br>
-							{{ event[32] | nl2br }}
+							{{ event[31] | nl2br }}
 							{% else %}
 							Date does not conflict with lunchtime calendar events<br>
 							{% endif %}

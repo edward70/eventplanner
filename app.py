@@ -37,7 +37,7 @@ db_signature = '''(name text, organisers text, mainstudentname text,
                 financial text, logistical text, materials text, risks text,
                 requestdetails text, cashtinbool text, floatbool text,
                 cashsupervise text, organisation text, paymentdetails text,
-                eventhash text, approval text, approvalindex integer)'''
+                eventhash text, approval text)'''
 cur.execute('CREATE TABLE IF NOT EXISTS events {}'.format(db_signature))
 atexit.register(lambda: con.close())
 
@@ -189,7 +189,6 @@ def neweventpost():
     d_hash = hashlib.sha224(str(data).encode("utf-8")).hexdigest()
     data.append(d_hash)
     data.append("pending")
-    data.append(0)
     print(str(data))
     cur.execute('INSERT INTO events VALUES({})'.format(('?,' * 30)[0:-1]), data)
     return redirect(url_for('progress', eventhash=d_hash))
@@ -219,7 +218,6 @@ def editeventpost():
         return redirect(url_for('editevent', eventhash=data[28])+"?fail=true")
     data.append(request.form.get(eventhash, "").trim())
     data.append("pending")
-    data.append(0)
     with transaction(con):
         cur.execute('DELETE FROM events WHERE eventhash = ?', (data[28],))
         cur.execute('INSERT INTO events VALUES({})'.format(('?,' * 30)[0:-1]), data)
