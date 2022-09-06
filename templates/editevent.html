@@ -26,7 +26,7 @@
 		  <label>Teacher In Charge</label><br>
 		  <input type="text" name="teacher" placeholder="Ms. Jones" value="{{ event[4] }}" required><br>
 		  <label>Event Summary (ie. the reason for the event, students or groups involved, general requirements, etc.)</label><br>
-		  <textarea name="summary" placeholder="Lorem ipsum dolor sit amet..." value="{{ event[5] }}" required></textarea><br>
+		  <textarea name="summary" placeholder="Lorem ipsum dolor sit amet..." required>{{ event[5] }}</textarea><br>
 		  <label>Live School Calendar</label>
 		  <iframe src="{{ schoolcalendar }}" height="500"></iframe>
 		  <label>Live Lunchtime Activities Calendar</label>
@@ -67,7 +67,7 @@
 		  <input type="radio" name="productsbool" id="productsno" checked value="No">
 		  <label for="productsno">No</label><br><br>
 		  {% endif %}
-		  <label>Who is responsible for purchasing products (if applicable)</label><br>
+		  <label>Who is responsible for purchasing products (leave empty if not applicable)</label><br>
 		  <input type="text" name="productsresponsibility" placeholder="Jane Smith" value="{{ event[14] }}"><br>
 		  <label>Are any school items/furniture required?</label><br>
 		  {% if event[15] == "Yes" %}
@@ -81,7 +81,7 @@
 		  <input type="radio" name="furniturebool" id="furnitureno" checked value="No">
 		  <label for="furnitureno">No</label><br><br>
 		  {% endif %}
-		  <label>List required items/furniture (if applicable)</label><br>
+		  <label>List required items/furniture (leave empty if not applicable)</label><br>
 		  <textarea name="furniture" placeholder="Chairs, tables" value="{{ event[16] }}"></textarea><br>
 		  <label>Is assistance required for setting up or packing up?</label><br>
 		  {% if event[17] %}
@@ -104,7 +104,7 @@
 		  <label for="materials">Requesting additional materials necessary for the event</label><br>
 		  <input type="checkbox" name="risks" id="risks" {% if event[21] %}checked{% endif %} value="risks">
 		  <label for="risks">Request for approval of event risks (ie. possible allergy risks, OH&S risks, etc.)</label><br><br>
-		  <label>Include details about prior requests (if applicable)</label><br>
+		  <label>Include details about prior requests (leave empty if not applicable)</label><br>
 		  <textarea name="requestdetails" value="{{ event[22] }}"></textarea>
 		  <p>All money collected within schools MUST go through the school accounts. At no point can students be solely responsible for cash; a teacher must always be present. Please follow the cash handling guide.</p>
 		  <label>Do you need a cash tin?</label><br>
@@ -132,11 +132,11 @@
 		  <input type="radio" name="floatbool" id="floatno" value="No" checked>
 		  <label for="floatno">No</label><br><br>
 		  {% endif %}
-		  <label>Which staff member will collect and supervise cash handling and return the money? (if applicable)</label><br>
+		  <label>Which staff member will collect and supervise cash handling and return the money? (leave empty if not applicable)</label><br>
 		  <input type="text" name="cashsupervise" value="{{ event[25] }}"><br>
-		  <label>If this is a fundraising; What organisation is money being raised for? (if applicable)</label><br>
+		  <label>If this is a fundraising; What organisation is money being raised for? (leave empty if not applicable)</label><br>
 		  <input type="text" name="organisation" value="{{ event[26] }}"><br>
-		  <label>If this is a fundraising; What are the payment details and arrangements? (if applicable)</label><br>
+		  <label>If this is a fundraising; What are the payment details and arrangements? (leave empty if not applicable)</label><br>
 		  <input type="text" name="paymentdetails" value="{{ event[27] }}"><br>
 		  {% if fail %}
 		    <p>Error: Data invalid. Make sure data submitted is in correct format.</p>
