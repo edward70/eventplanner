@@ -16,7 +16,7 @@
 		</header>
 		<form action="{{ url_for('editeventpost') }}" method="post">
 		  <label>Event Name</label><br>
-		  <input type="text" name="eventname" placeholder="Super Cool Event" value="{{ event[0] }}" required><br>
+		  <input type="text" name="name" placeholder="Super Cool Event" value="{{ event[0] }}" required><br>
 		  <label>Student Organisers</label><br>
 		  <input type="text" name="organisers" placeholder="Jane Smith, Bob Alexander" value="{{ event[1] }}" required><br>
 		  <label>Name of Main Student</label><br>
@@ -26,7 +26,7 @@
 		  <label>Teacher In Charge</label><br>
 		  <input type="text" name="teacher" placeholder="Ms. Jones" value="{{ event[4] }}" required><br>
 		  <label>Event Summary (ie. the reason for the event, students or groups involved, general requirements, etc.)</label><br>
-		  <textarea name="mainstudentname" placeholder="Lorem ipsum dolor sit amet..." value="{{ event[5] }}" required></textarea><br>
+		  <textarea name="summary" placeholder="Lorem ipsum dolor sit amet..." value="{{ event[5] }}" required></textarea><br>
 		  <label>Live School Calendar</label>
 		  <iframe src="{{ schoolcalendar }}" height="500"></iframe>
 		  <label>Live Lunchtime Activities Calendar</label>

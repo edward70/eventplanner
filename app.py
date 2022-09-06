@@ -14,7 +14,7 @@ app.jinja_env.filters['nl2br'] = nl2br # enable newline to br converter plugin
 
 # hardcoded constants
 auth = {"username": "password"} # username -> password
-names = {"username": "John Doe"} # username -> real name
+names = {"username": "Example Teacher"} # username -> real name
 # approval order removed since multiuser is outside of scope
 #approval_order = ["username"]
 # school calendar url
