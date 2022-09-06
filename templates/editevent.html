@@ -14,6 +14,10 @@
 		  <img class="logo" src="{{ url_for('static', filename='suzanne-cory-logo.svg') }}">
 		  <h2 class="title">Edit Event</h2>
 		</header>
+		<br>
+		{% if fail %}
+		    <p>Error: Data invalid. Make sure data submitted is in correct format.</p>
+		{% endif %}
 		<form action="{{ url_for('editeventpost') }}" method="post">
 		  <label>Event Name</label><br>
 		  <input type="text" name="name" placeholder="Super Cool Event" value="{{ event[0] }}" required><br>
@@ -138,9 +142,6 @@
 		  <input type="text" name="organisation" value="{{ event[26] }}"><br>
 		  <label>If this is a fundraising; What are the payment details and arrangements? (leave empty if not applicable)</label><br>
 		  <input type="text" name="paymentdetails" value="{{ event[27] }}"><br>
-		  {% if fail %}
-		    <p>Error: Data invalid. Make sure data submitted is in correct format.</p>
-		  {% endif %}
 		  <!-- https://www.w3schools.com/tags/att_input_type_hidden.asp -->
 		  <input type="hidden" id="eventhash" name="eventhash" value="{{ eventhash }}">
 		  <input type="submit" value="Submit">

@@ -14,6 +14,10 @@
 		  <img class="logo" src="{{ url_for('static', filename='suzanne-cory-logo.svg') }}">
 		  <h2 class="title">Event Proposal Form</h2>
 		</header>
+		<br>
+		{% if fail %}
+		    <p>Error: Data invalid. Make sure data submitted is in correct format.</p>
+		{% endif %}
 		<form action="{{ url_for('neweventpost') }}" method="post">
 		  <p>Data collected by this form will be used to propose a new school event. If you have any inquiries about how this data is used, please contact Ms. Nguyen.</p>
 		  <label>Event Name</label><br>
@@ -98,9 +102,6 @@
 		  <input type="text" name="paymentdetails"><br>
 		  <p>Remember to email any promotional materials for the event to <a href="mailto:communications@suzannecoryhs.vic.edu.au">communications@suzannecoryhs.vic.edu.au</a>. Additionally, send any photos from after the event and a newsletter article.</p>
 		  <p>By submitting this event proposal, I acknowledge that the event complies with school rules and applicable SCHS events policies.</p>
-		  {% if fail %}
-		    <p>Error: Data invalid. Make sure data submitted is in correct format.</p>
-		  {% endif %}
 		  <input type="submit" value="Submit">
 		</form>
     </main>
