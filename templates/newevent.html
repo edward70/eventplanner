@@ -17,7 +17,7 @@
 		<form action="{{ url_for('neweventpost') }}" method="post">
 		  <p>Data collected by this form will be used to propose a new school event. If you have any inquiries about how this data is used, please contact Ms. Nguyen.</p>
 		  <label>Event Name</label><br>
-		  <input type="text" name="eventname" placeholder="Super Cool Event" required><br>
+		  <input type="text" name="name" placeholder="Super Cool Event" required><br>
 		  <label>Student Organisers</label><br>
 		  <input type="text" name="organisers" placeholder="Jane Smith, Bob Alexander" required><br>
 		  <label>Name of Main Student</label><br>
@@ -27,7 +27,7 @@
 		  <label>Teacher In Charge</label><br>
 		  <input type="text" name="teacher" placeholder="Ms. Jones" required><br>
 		  <label>Event Summary (ie. the reason for the event, students or groups involved, general requirements, etc.)</label><br>
-		  <textarea name="mainstudentname" placeholder="Lorem ipsum dolor sit amet..." required></textarea><br>
+		  <textarea name="summary" placeholder="Lorem ipsum dolor sit amet..." required></textarea><br>
 		  <label>Live School Calendar</label>
 		  <iframe src="{{ schoolcalendar }}" height="500"></iframe>
 		  <label>Live Lunchtime Activities Calendar</label>
