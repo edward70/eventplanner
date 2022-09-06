@@ -21,66 +21,71 @@
 				{% if pending %}
 					{% for event in pending %}
 						<h4>{{ event[0] }}</h4>
-						<p class="data">
-							Student Organisers: {{ event[1] }}<br>
-							Main Student Name: {{ event[2] }}<br>
-							Main Student Email: {{ event[3] }}<br>
-							Teacher In Charge: {{ event[4] }}<br>
-							Summary: {{ event[5] | nl2br }}<br>
-							Date: {{ event[6] }}<br>
-							Time: {{ event[7] }}<br>
-							Venue: {{ event[8] }}<br>
-							Who is setting up: {{ event[9] }}<br>
-							What is being set up: {{ event[10] | nl2br }}<br>
-							Setting up during class time: {{ event[11] }}<br>
-							Event set-up time: {{ event[12] }}<br>
-							Do products have to be purchased?: {{ event[13] }}<br>
+						<p>
+							<div class="data">Student Organisers:</div> {{ event[1] }}<br>
+							<div class="data">Main Student Name:</div> {{ event[2] }}<br>
+							<div class="data">Main Student Email:</div> {{ event[3] }}<br>
+							<div class="data">Teacher In Charge:</div> {{ event[4] }}<br>
+							<div class="data">Summary:</div>
+							<small>{{ event[5].strip() | nl2br }}</small><br>
+							<div class="data">Date:</div> {{ event[6] }}<br>
+							<div class="data">Time:</div> {{ event[7] }}<br>
+							<div class="data">Venue:</div> {{ event[8] }}<br>
+							<div class="data">Who is setting up:</div> {{ event[9] }}<br>
+							<div class="data">What is being set up:</div>
+							<small>{{ event[10].strip() | nl2br }}</small><br>
+							<div class="data">Setting up during class time:</div> {{ event[11] }}<br>
+							<div class="data">Event set-up time:</div> {{ event[12] }}<br>
+							<div class="data">Do products have to be purchased?:</div> {{ event[13] }}<br>
 							{% if event[14] %}
-							Responsible for purchasing products: {{ event[14] }}<br>
+							<div class="data">Responsible for purchasing products:</div> {{ event[14] }}<br>
 							{% endif %}
-							School items or furniture requirement: {{ event[15] }}<br>
+							<div class="data">School items or furniture requirement:</div> {{ event[15] }}<br>
 							{% if event[16] %}
-							School items/furniture required: {{ event[16] | nl2br }}<br>
+							<div class="data">School items/furniture required:</div>
+							<small>{{ event[16].strip() | nl2br }}</small><br>
 							{% endif %}
-							Assistance Requirement: {{ event[17] }}<br>
+							<div class="data">Assistance Requirement:</div> {{ event[17] }}<br>
 							{% if event[18] %}
-							Financial Support Request: Yes<br>
+							<div class="data">Financial Support Request:</div> Yes<br>
 							{% endif %}
 							{% if event[19] %}
-							Logistical Support Request: Yes<br>
+							<div class="data">Logistical Support Request:</div> Yes<br>
 							{% endif %}
 							{% if event[20] %}
-							Additional Material Support Request: Yes<br>
+							<div class="data">Additional Material Support Request:</div> Yes<br>
 							{% endif %}
 							{% if event[21] %}
-							Event Risk Approval Request: Yes<br>
+							<div class="data">Event Risk Approval Request:</div> Yes<br>
 							{% endif %}
 							{% if event[22] %}
-							Request details: {{ event[22] | nl2br }}<br>
+							<div class="data">Request details:</div>
+							<small>{{ event[22].strip() | nl2br }}</small><br>
 							{% endif %}
-							Cash Tin Requirement: {{ event[23] }}<br>
-							Float Requirement: {{ event[24] }}<br>
+							<div class="data">Cash Tin Requirement:</div> {{ event[23] }}<br>
+							<div class="data">Float Requirement:</div> {{ event[24] }}<br>
 							{% if event[25] %}
-							Staff member who will supervise cash handling and collect the money: {{ event[25] }}<br>
+							<div class="data">Staff member who will supervise cash handling and collect the money:</div> {{ event[25] }}<br>
 							{% endif %}
 							{% if event[26] %}
-							Organisation money is being raised for: {{ event[26] }}<br>
+							<div class="data">Organisation money is being raised for:</div> {{ event[26] }}<br>
 							{% endif %}
 							{% if event[27] %}
-							Fundraiser payment details: {{ event[27] }}<br>
+							<div class="data">Fundraiser payment details:</div> {{ event[27] }}<br>
 							{% endif %}
 							{% if event[30] %}
-							Date conflicts with the following school calendar events:<br>
-							{{ event[30] | nl2br }}
+							<div class="data">Date conflicts with the following school calendar events:</div>
+							<small>{{ event[30].strip() | nl2br }}</small><br>
 							{% else %}
-							Date does not conflict with school calendar events<br>
+							<div class="data">Date does not conflict with school calendar events</div>
 							{% endif %}
 							{% if event[31] %}
-							Date conflicts with the following lunchtime calendar events:<br>
-							{{ event[31] | nl2br }}
+							<div class="data">Date conflicts with the following lunchtime calendar events:</div>
+							<small>{{ event[31].strip() | nl2br }}</small><br>
 							{% else %}
-							Date does not conflict with lunchtime calendar events<br>
+							<div class="data">Date does not conflict with lunchtime calendar events</div>
 							{% endif %}
+							<br>
 							<div class="buttons">
 								<a href="{{ url_for('approveevent', eventhash=event[28]) }}" class="greenbutton">Approve</a>
 								<a href="{{ url_for('rejectevent', eventhash=event[28]) }}" class="redbutton">Reject</a>

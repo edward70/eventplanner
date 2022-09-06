@@ -42,7 +42,8 @@ db_signature = '''(name text, organisers text, mainstudentname text,
 cur.execute('CREATE TABLE IF NOT EXISTS events {}'.format(db_signature)) # create table if it doesn't exist
 atexit.register(lambda: con.close()) # autoclose database
 
-currentYear = datetime.datetime.now().year # get current year
+currentDate = datetime.datetime.now() # get date
+currentYear = currentDate.year # get current year
 
 def parse_calendar(filename): # function to parse calendar files
     wordDoc = Document(filename) # open document
@@ -98,7 +99,10 @@ def transaction(conn): # transaction handling function
 # https://stackoverflow.com/questions/41129921/validate-an-iso-8601-datetime-string-in-python
 def datetime_valid(dt_str): # function to check if date is valid
     try: # handle error
-        datetime.fromisoformat(dt_str) # attempt string to date conversion
+        date = datetime.fromisoformat(dt_str) # attempt string to date conversion
+        year = date.year # get event year
+        if not (year == currentYear and date.month >= currentDate.month and date.day >= currentDate.day): # cant add an event to the past
+            return False # fail
     except:
         return False # if there's an error, it's not a valid date
     return True # date is valid
@@ -113,7 +117,7 @@ def handle_event(request): # data spec event handling logic function
            "financial", "logistical", "materials", "risks",
            "requestdetails", "cashtinbool", "floatbool",
            "cashsupervise", "organisation", "paymentdetails"] # data attributes from html form
-    data = [request.form.get(i,"").trim() for i in lst] # put data in a list
+    data = [request.form.get(i,"").strip() for i in lst] # put data in a list
     return data # return the data
     
 def validate_event(data): # event validation logic function
@@ -125,7 +129,7 @@ def validate_event(data): # event validation logic function
         return False
     elif not datetime_valid(data[6]): # validate date
         return False
-    elif not pattern.match(data[7]): # validate time
+    elif not (pattern.match(data[7]) and pattern.match(data[12])): # validate time
         return False
     elif not pattern2.match(data[3]): # validate email
         return False
@@ -218,7 +222,7 @@ def editeventpost():
     data = handle_event(request) # process event data
     if validate_event(data) == False: # validate event data
         return redirect(url_for('editevent', eventhash=data[28])+"?fail=true") # validation failed, redirect user
-    data.append(request.form.get(eventhash, "").trim()) # add formatted event hash to data
+    data.append(request.form.get(eventhash, "").strip()) # add formatted event hash to data
     data.append("pending") # set event as pending
     with transaction(con): # create a database transaction for ACID guarantees - ie. no database corruption even if there's power failure or OS crashes
         cur.execute('DELETE FROM events WHERE eventhash = ?', (data[28],)) # delete previous data in the database
