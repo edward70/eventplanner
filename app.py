@@ -122,16 +122,20 @@ def handle_event(request): # data spec event handling logic function
     
 def validate_event(data): # event validation logic function
     pattern = re.compile('((1[0-2]|0?[1-9]):([0-5][0-9]) ?([AaPp][Mm]))') # time regex
-    pattern2 = re.compile("^[a-zA-Z0-9.! #$%&'*+/=? ^_`{|}~-]+@[a-zA-Z0-9-]+(?:\. [a-zA-Z0-9-]+)*$") # email regex
+    pattern2 = re.compile("^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$") # email regex
     if not (all(data[0:14]) and data[15] and data[17] and data[26] and data[25]): # existence check
         return False
     elif not all(map([data[11], data[13], data[15], data[17], data[26], data[25]], lambda x: (x == "Yes" or x == "No"))): # validate radio button
+        return False
+    elif not ((data[11] == "Yes") == bool(data[12]) and (data[13] == "Yes") == bool(data[14]) and (data[15] == "Yes") == bool(data[16])): # ensure optional fields filled
+        return False
+    elif not ((bool(data[18]) and bool(data[19]) and bool(data[20]) and bool(data[21])) == bool(data[22])): # handle optional request details
         return False
     elif not datetime_valid(data[6]): # validate date
         return False
     elif not (pattern.match(data[7]) and pattern.match(data[12])): # validate time
         return False
-    elif not pattern2.match(data[3]): # validate email
+    elif not (pattern2.match(data[3]) and "." in data[3]): # validate email, don't accept weird but technically valid RFC formats
         return False
     else:
         return True # data passes all validation checks
@@ -201,11 +205,13 @@ def neweventpost():
     
 @app.route("/progress/<eventhash>") # progress page with event hash
 def progress(eventhash): # accept event hash
-    approval = cur.execute('SELECT * FROM events WHERE eventhash = ?', (eventhash,)).fetchone()[29] # fetch one row of data from the database and index approval status
+    row = cur.execute('SELECT * FROM events WHERE eventhash = ?', (eventhash,)).fetchone() # fetch one row of data from the database
+    approval = row[29] # and index approval status
+    teacher = row[4] # get lead teacher
     print(eventhash)
     teachers = [names.get(i) for i in auth if names.get(i) != None] # get names of teachers
     print(teachers)
-    return render_template('progress.html', teachers=teachers, approval=approval) # pass teachers and approval status (currently approval is simultaneous for all teachers)
+    return render_template('progress.html', lead=teacher, teachers=teachers, approval=approval) # pass teachers and approval status (currently approval is simultaneous for all teachers)
     
 @app.route("/editevent/<eventhash>") # event edit page for Ms. Nguyen to edit events
 @privileged # privileged user access only

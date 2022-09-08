@@ -15,10 +15,23 @@
 		  <h2 class="title">Event Proposal Progress Tracker</h2>
 		</header>
 		<br>
+		{% if approval == "pending" %}
+		<p class="green">Thank you for submitting your event proposal. Your event is currently under review.</p>
+		{% endif %}
 		<table>
 		  <tr>
-			<th>Status</th>
-			<th>Teacher Performing Review</th>
+			<th>Review Status</th>
+			<th>Name of Teacher</th>
+		  </tr>
+		  <tr>
+			{% if approval == "approved" %}
+			<td>&#x2714;&#xFE0F;</td>
+			{% elif approval == "rejected" %}
+			<td>&#10060;</td>
+			{% else %}
+			<td>Pending</td>
+			{% endif %}
+			<td>{{ lead }}</td>
 		  </tr>
 		  {% for teacher in teachers %}
 		  <tr>
