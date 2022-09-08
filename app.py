@@ -45,12 +45,16 @@ atexit.register(lambda: con.close()) # autoclose database
 currentDate = datetime.datetime.now() # get date
 currentYear = currentDate.year # get current year
 
-def parse_calendar(filename): # function to parse calendar files
+def parse_calendar(filename, holidays=False): # function to parse calendar files, don't check holidays by default
     wordDoc = Document(filename) # open document
     lastNum = 0 # last day number checked (0 for none checked)
     currentMonth = 1 # start at Jan
     datesTaken = [] # list to store dates taken
     conflicts = [] # list to store info for date conflict gui
+    if holidays: # only if holidays option is enabled
+        global holiday_list # this is a judgement free space okay? the global makes the code not throw errors
+        holiday_list = [] # create list of holiday dates (includes public holidays, curriculum days, whole school event days)
+        # note that school holidays are not included since you might want an event during the school holidays
     for table in wordDoc.tables: # loop through tables in document
         for row in table.rows: # loop through table rows
             for cell in row.cells: # loop through each cell
@@ -62,13 +66,23 @@ def parse_calendar(filename): # function to parse calendar files
                         
                         if day < lastNum: # data validation: check that subsequent date is larger than previous
                             currentMonth = currentMonth + 1 # increment month
-                        
-                        datesTaken.append(datetime.date(currentYear, currentMonth, day).isoformat()) # add date to list
+
+                        parsed_date = datetime.date(currentYear, currentMonth, day).isoformat() # create date
+
+                        if holidays: # check holidays
+                            pattern = re.compile('w:fill=\"(\S*)\"') # use regex to search for fill color
+                            match = pattern.search(cell._tc.xml) # search color in the document xml
+                            if match: # check if the search pattern matches
+                                result = match.group(1) # get the first part of the pattern matched
+                                if result in ["b2a1c7", "69e251", "f9cb9c"]: # check if the color of the table cell matches holiday
+                                    holiday_list.append(parsed_date) # add date to list
+                            
+                        datesTaken.append(parsed_date) # add date to list
                         conflicts.append(cell.text[len(cell_data[0])+1:]) # add cell text to conflict list
                         lastNum = day # change last day to processed day
-    return dict(zip(datesTaken, conflicts)) # convert to dictionary and return
+    return (holiday_list, dict(zip(datesTaken, conflicts))) # convert to dictionary and return
     
-calendar = parse_calendar('calendar.docx') # parse school calendar
+holidays, calendar = parse_calendar('calendar.docx', holidays=True) # parse school calendar and holidays
 lunchtime_calendar = parse_calendar('lunchtimecalendar.docx') # parse lunch calendar
 
 # decorator to check authorization for privileged operations
@@ -102,6 +116,8 @@ def datetime_valid(dt_str): # function to check if date is valid
         date = datetime.fromisoformat(dt_str) # attempt string to date conversion
         year = date.year # get event year
         if not (year == currentYear and date.month >= currentDate.month and date.day >= currentDate.day): # cant add an event to the past
+            return False # fail
+        elif dt_str in holidays: # check if date is not a holiday date
             return False # fail
     except:
         return False # if there's an error, it's not a valid date
