@@ -13,7 +13,7 @@ app = Flask(__name__) # create flask webserver
 app.jinja_env.filters['nl2br'] = nl2br # enable newline to br converter plugin
 
 # hardcoded constants
-auth = {"username": "password"} # username -> password
+auth = {"username": "Lr5tFNs8h6gmVt5EtsHu"} # username -> password
 names = {"username": "Example Teacher"} # username -> real name
 # approval order removed since multiuser is outside of scope
 #approval_order = ["username"]
@@ -143,7 +143,7 @@ def validate_event(data): # event validation logic function
         return False
     elif not all(map([data[11], data[13], data[15], data[17], data[26], data[25]], lambda x: (x == "Yes" or x == "No"))): # validate radio button
         return False
-    elif not ((data[11] == "Yes") == bool(data[12]) and (data[13] == "Yes") == bool(data[14]) and (data[15] == "Yes") == bool(data[16])): # ensure optional fields filled
+    elif not ((data[11] == "Yes") == bool(data[12]) and (data[13] == "Yes") == bool(data[14]) and (data[15] == "Yes") == bool(data[16])) and ((data[23] == "Yes") == bool(data[27])) and ((data[23] == "Yes") == bool(data[26])) and ((data[23] == "Yes") == bool(data[25])): # ensure optional fields filled
         return False
     elif not ((bool(data[18]) and bool(data[19]) and bool(data[20]) and bool(data[21])) == bool(data[22])): # handle optional request details
         return False

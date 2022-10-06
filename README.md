@@ -22,3 +22,8 @@ http://localhost:5000/login
 http://localhost:5000/manager
 
 There's others but you can access them with links from those pages.
+
+# credentials
+
+username: username
+password: Lr5tFNs8h6gmVt5EtsHu
