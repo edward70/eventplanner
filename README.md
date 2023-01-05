@@ -1,3 +1,7 @@
+# SCHS Event Planner
+
+Event Planning software for Suzanne Cory High School.
+
 # install instructions
 
 pip install flask python-docx
