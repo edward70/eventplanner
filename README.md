@@ -2,8 +2,6 @@
 
 Event Planning web application written using Python, Flask and SQLite.
 
-![Screenshot of Event Planner](https://edward70.github.io/img/events.PNG)
-
 # install instructions
 
 pip install flask python-docx
