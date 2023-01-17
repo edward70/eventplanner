@@ -1,6 +1,6 @@
-# SCHS Event Planner
+# Event Planner
 
-Event Planning software for Suzanne Cory High School.
+Event Planning web application written using Python, Flask and SQLite.
 
 ![Screenshot of Event Planner](https://edward70.github.io/img/events.PNG)
 
@@ -29,7 +29,7 @@ http://localhost:5000/manager
 
 There's others but you can access them with links from those pages.
 
-# credentials
+# test credentials
 
 username: username
 password: Lr5tFNs8h6gmVt5EtsHu
